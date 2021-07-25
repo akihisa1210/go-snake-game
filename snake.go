@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 type Direction int
 
 const (
@@ -18,44 +16,38 @@ type Position struct {
 
 type Snake struct {
 	direction Direction
-	position  Position
+	section   Position
 }
 
-func NewSnake(d Direction, x int, y int) *Snake {
+func NewSnake(d Direction, p Position) *Snake {
 	return &Snake{
 		direction: d,
-		position: Position{
-			x,
-			y,
-		},
+		section:   p,
 	}
 }
 
 func (s *Snake) move() {
 	switch s.direction {
 	case Up:
-		s.position.y--
+		s.section.y--
 	case Right:
-		s.position.x++
+		s.section.x++
 	case Down:
-		s.position.y++
+		s.section.y++
 	case Left:
-		s.position.x--
+		s.section.x--
 	}
 }
 
 func (s *Snake) changeDirection(d Direction) {
-	if s.direction == d || s.isOppositeDirection(s.direction, d) {
+	if s.direction == d || s.isOppositeDirection(d) {
 		return
 	}
-
-	fmt.Println(d) // debug
 	s.direction = d
-	fmt.Println(s.direction) // debug
 }
 
-func (s *Snake) isOppositeDirection(current Direction, target Direction) bool {
-	switch current {
+func (s *Snake) isOppositeDirection(target Direction) bool {
+	switch s.direction {
 	case Up:
 		if target == Down {
 			return true
@@ -73,5 +65,5 @@ func (s *Snake) isOppositeDirection(current Direction, target Direction) bool {
 			return true
 		}
 	}
-	return true
+	return false
 }

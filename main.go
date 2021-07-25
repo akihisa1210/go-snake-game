@@ -18,12 +18,11 @@ func update(s *Snake) error {
 	termbox.Clear(defaultColor, defaultColor)
 
 	s.move()
-	// fmt.Printf("%+v, %+v\n", s.position, s.direction) // debug
 
 	// render stage and snake
 	for y := 0; y < height; y++ {
 		for x := 0; x < witdh; x++ {
-			if x == s.position.x && y == s.position.y {
+			if x == s.section.x && y == s.section.y {
 				termbox.SetCell(x, y, 'O', defaultColor, defaultColor)
 			} else {
 				termbox.SetCell(x, y, '_', defaultColor, defaultColor)
@@ -54,7 +53,7 @@ func main() {
 
 	go listenToKey(keyEvents)
 
-	s := NewSnake(0, 15, 5)
+	s := NewSnake(0, Position{15, 5})
 
 mainloop:
 	for {
@@ -64,17 +63,13 @@ mainloop:
 			case termbox.KeyEsc:
 				break mainloop
 			case termbox.KeyArrowUp:
-				// s.changeDirection(Up)
-				s.direction = Up
+				s.changeDirection(Up)
 			case termbox.KeyArrowRight:
-				// s.changeDirection(Right)
-				s.direction = Right
+				s.changeDirection(Right)
 			case termbox.KeyArrowDown:
-				// s.changeDirection(Down)
-				s.direction = Down
+				s.changeDirection(Down)
 			case termbox.KeyArrowLeft:
-				// s.changeDirection(Left)
-				s.direction = Left
+				s.changeDirection(Left)
 			}
 		default:
 			update(s)

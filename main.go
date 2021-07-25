@@ -3,6 +3,7 @@ package main
 import (
 	"time"
 
+	"github.com/akihisa1210/go-snake-game/snake"
 	"github.com/nsf/termbox-go"
 )
 
@@ -14,15 +15,15 @@ var (
 
 var keyEvents = make(chan termbox.Key)
 
-func update(s *Snake) error {
+func update(s *snake.Snake) error {
 	termbox.Clear(defaultColor, defaultColor)
 
-	s.move()
+	s.Move()
 
 	// render stage and snake
 	for y := 0; y < height; y++ {
 		for x := 0; x < witdh; x++ {
-			if x == s.section.x && y == s.section.y {
+			if x == s.GetCurrentPosition().X && y == s.GetCurrentPosition().Y {
 				termbox.SetCell(x, y, 'O', defaultColor, defaultColor)
 			} else {
 				termbox.SetCell(x, y, '_', defaultColor, defaultColor)
@@ -53,7 +54,7 @@ func main() {
 
 	go listenToKey(keyEvents)
 
-	s := NewSnake(0, Position{15, 5})
+	s := snake.NewSnake(0, snake.Position{X: 15, Y: 5})
 
 mainloop:
 	for {
@@ -63,13 +64,13 @@ mainloop:
 			case termbox.KeyEsc:
 				break mainloop
 			case termbox.KeyArrowUp:
-				s.changeDirection(Up)
+				s.ChangeDirection(snake.Up)
 			case termbox.KeyArrowRight:
-				s.changeDirection(Right)
+				s.ChangeDirection(snake.Right)
 			case termbox.KeyArrowDown:
-				s.changeDirection(Down)
+				s.ChangeDirection(snake.Down)
 			case termbox.KeyArrowLeft:
-				s.changeDirection(Left)
+				s.ChangeDirection(snake.Left)
 			}
 		default:
 			update(s)

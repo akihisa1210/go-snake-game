@@ -1,4 +1,4 @@
-package main
+package snake
 
 type Direction int
 
@@ -10,8 +10,8 @@ const (
 )
 
 type Position struct {
-	x int
-	y int
+	X int
+	Y int
 }
 
 type Snake struct {
@@ -26,20 +26,24 @@ func NewSnake(d Direction, p Position) *Snake {
 	}
 }
 
-func (s *Snake) move() {
+func (s *Snake) GetCurrentPosition() Position {
+	return s.section
+}
+
+func (s *Snake) Move() {
 	switch s.direction {
 	case Up:
-		s.section.y--
+		s.section.Y--
 	case Right:
-		s.section.x++
+		s.section.X++
 	case Down:
-		s.section.y++
+		s.section.Y++
 	case Left:
-		s.section.x--
+		s.section.X--
 	}
 }
 
-func (s *Snake) changeDirection(d Direction) {
+func (s *Snake) ChangeDirection(d Direction) {
 	if s.direction == d || s.isOppositeDirection(d) {
 		return
 	}

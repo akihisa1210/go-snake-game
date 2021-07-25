@@ -1,4 +1,4 @@
-package main
+package snake
 
 import "testing"
 
@@ -37,7 +37,7 @@ func TestSnakeMove(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewSnake(tt.current_direction, tt.current_position)
-			s.move()
+			s.Move()
 			if s.section != tt.want {
 				t.Errorf("invalid movement! expected: %+v, actual: %+v\n", tt.want, s.section)
 			}
@@ -74,9 +74,32 @@ func TestSnakeChangeDirection(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewSnake(tt.current_direction, Position{0, 0})
-			s.changeDirection(tt.target_direction)
+			s.ChangeDirection(tt.target_direction)
 			if s.direction != tt.want {
 				t.Errorf("invalid direction! expected: %+v, actual: %+v\n", tt.want, s.direction)
+			}
+		})
+	}
+}
+
+func TestSnakeGetPosition(t *testing.T) {
+	tests := []struct {
+		name             string
+		current_position Position
+		want             Position
+	}{
+		{
+			"(1, 1)",
+			Position{1, 1},
+			Position{1, 1},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := NewSnake(Down, tt.current_position)
+			cp := s.GetCurrentPosition()
+			if cp != tt.want {
+				t.Errorf("invalid position! expected: %+v, actual: %+v\n", tt.want, cp)
 			}
 		})
 	}

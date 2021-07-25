@@ -41,7 +41,7 @@ func update(g *snake.Game, stg *snake.Stage, snk *snake.Snake) error {
 			} else if stg.IsWall(snake.Position{X: x, Y: y}) {
 				termbox.SetCell(x, y, 'X', defaultColor, defaultColor)
 			} else {
-				termbox.SetCell(x, y, '_', defaultColor, defaultColor)
+				termbox.SetCell(x, y, '-', defaultColor, defaultColor)
 			}
 		}
 	}

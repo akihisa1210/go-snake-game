@@ -11,7 +11,7 @@ func NewStage(w int, h int, snake *Snake) *Stage {
 }
 
 func (stg *Stage) IsWall(p Position) bool {
-	if (p.X <= 0 || p.X >= stg.width) || (p.Y <= 0 || p.Y >= stg.height) {
+	if (p.X <= 0 || p.X >= stg.width-1) || (p.Y <= 0 || p.Y >= stg.height-1) {
 		return true
 	}
 	return false

@@ -8,37 +8,53 @@ import (
 )
 
 var (
-	height       = 15
-	witdh        = 50
 	defaultColor = termbox.ColorDefault
 )
 
-var keyEvents = make(chan termbox.Key)
+type EventType int
 
-func update(s *snake.Snake) error {
+const (
+	Key EventType = iota
+	GameOver
+)
+
+// Event is key input or game over.
+// If key input event, its content is termbox.Key.
+// If game over event, its content is nil.
+type Event struct {
+	kind    EventType
+	content interface{}
+}
+
+var events = make(chan Event)
+
+func update(g *snake.Game, stg *snake.Stage, snk *snake.Snake) error {
 	termbox.Clear(defaultColor, defaultColor)
 
-	s.Move()
+	snk.Move()
 
 	// render stage and snake
-	for y := 0; y < height; y++ {
-		for x := 0; x < witdh; x++ {
-			if x == s.GetCurrentPosition().X && y == s.GetCurrentPosition().Y {
+	for y := 0; y < stg.GetHeight(); y++ {
+		for x := 0; x < stg.GetWidth(); x++ {
+			if x == snk.GetCurrentPosition().X && y == snk.GetCurrentPosition().Y {
 				termbox.SetCell(x, y, 'O', defaultColor, defaultColor)
+			} else if stg.IsWall(snake.Position{X: x, Y: y}) {
+				termbox.SetCell(x, y, 'X', defaultColor, defaultColor)
 			} else {
 				termbox.SetCell(x, y, '_', defaultColor, defaultColor)
 			}
 		}
 	}
+
 	return termbox.Flush()
 }
 
-func listenToKey(events chan termbox.Key) {
+func listenToKey(events chan Event) {
 	for {
 		ev := termbox.PollEvent()
 		switch ev.Type {
 		case termbox.EventKey:
-			events <- ev.Key
+			events <- Event{kind: Key, content: ev.Key}
 		case termbox.EventError:
 			panic(ev.Err)
 		}
@@ -52,28 +68,41 @@ func main() {
 	}
 	defer termbox.Close()
 
-	go listenToKey(keyEvents)
+	go listenToKey(events)
 
-	s := snake.NewSnake(0, snake.Position{X: 15, Y: 5})
+	snk := snake.NewSnake(0, snake.Position{X: 15, Y: 5})
+	stg := snake.NewStage(50, 10, snk)
+	game := snake.NewGame(stg)
 
 mainloop:
 	for {
 		select {
-		case k := <-keyEvents:
-			switch k {
-			case termbox.KeyEsc:
-				break mainloop
-			case termbox.KeyArrowUp:
-				s.ChangeDirection(snake.Up)
-			case termbox.KeyArrowRight:
-				s.ChangeDirection(snake.Right)
-			case termbox.KeyArrowDown:
-				s.ChangeDirection(snake.Down)
-			case termbox.KeyArrowLeft:
-				s.ChangeDirection(snake.Left)
+		case e := <-events:
+			{
+				switch e.kind {
+				case Key:
+					switch e.content {
+					case termbox.KeyEsc:
+						break mainloop
+					case termbox.KeyArrowUp:
+						snk.ChangeDirection(snake.Up)
+					case termbox.KeyArrowRight:
+						snk.ChangeDirection(snake.Right)
+					case termbox.KeyArrowDown:
+						snk.ChangeDirection(snake.Down)
+					case termbox.KeyArrowLeft:
+						snk.ChangeDirection(snake.Left)
+					}
+				case GameOver:
+					break mainloop
+				}
 			}
 		default:
-			update(s)
+			// If you break mainloop in update(), terminal hangs.
+			if game.IsOver() {
+				break mainloop
+			}
+			update(game, stg, snk)
 			time.Sleep(time.Second / 10)
 		}
 	}

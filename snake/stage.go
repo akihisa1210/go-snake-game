@@ -16,3 +16,11 @@ func (stg *Stage) IsWall(p Position) bool {
 	}
 	return false
 }
+
+func (stg *Stage) GetHeight() int {
+	return stg.height
+}
+
+func (stg *Stage) GetWidth() int {
+	return stg.width
+}

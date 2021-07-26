@@ -8,40 +8,47 @@ func TestSnakeMove(t *testing.T) {
 	tests := []struct {
 		name              string
 		current_direction Direction
-		current_position  Position
+		current_position  []Position
 		want              Position
 	}{
 		{
 			"move to up",
 			Up,
-			Position{10, 10},
+			[]Position{
+				{10, 10},
+			},
 			Position{10, 9},
 		},
 		{
 			"move to right",
 			Right,
-			Position{10, 10},
+			[]Position{
+				{10, 10},
+			},
 			Position{11, 10},
 		},
 		{
 			"move to down",
 			Down,
-			Position{10, 10},
+			[]Position{
+				{10, 10},
+			},
 			Position{10, 11},
 		},
 		{
 			"move to left",
 			Left,
-			Position{10, 10},
-			Position{9, 10},
+			[]Position{
+				{10, 10},
+			}, Position{9, 10},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewSnake(tt.current_direction, tt.current_position)
 			s.Move()
-			if s.section[0] != tt.want {
-				t.Errorf("invalid movement! expected: %+v, actual: %+v\n", tt.want, s.section)
+			if s.sections[0] != tt.want {
+				t.Errorf("invalid movement! expected: %+v, actual: %+v\n", tt.want, s.sections)
 			}
 		})
 	}
@@ -117,14 +124,11 @@ func TestSnakeMoveWithMultipleSections(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// スネークの section に current_sections を順にプッシュしていく。
-			// current_sections はスネークの尾から頭に向って並んでいるのでこの順番で OK。
-			s := NewSnake(tt.current_direction, tt.current_sections[0])
-			s.section = append(s.section, tt.current_sections[1:]...)
+			s := NewSnake(tt.current_direction, tt.current_sections)
 			s.Move()
 			for i, w := range tt.want {
-				if s.section[i] != w {
-					t.Errorf("invalid position! index: %+v, expected: %+v, actual: %+v\n", i, w, s.section[i])
+				if s.sections[i] != w {
+					t.Errorf("invalid position! index: %+v, expected: %+v, actual: %+v\n", i, w, s.sections[i])
 				}
 			}
 		})
@@ -159,7 +163,7 @@ func TestSnakeChangeDirection(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewSnake(tt.current_direction, Position{0, 0})
+			s := NewSnake(tt.current_direction, []Position{{0, 0}})
 			s.ChangeDirection(tt.target_direction)
 			if s.direction != tt.want {
 				t.Errorf("invalid direction! expected: %+v, actual: %+v\n", tt.want, s.direction)
@@ -171,12 +175,14 @@ func TestSnakeChangeDirection(t *testing.T) {
 func TestSnakeGetPosition(t *testing.T) {
 	tests := []struct {
 		name             string
-		current_position Position
+		current_position []Position
 		want             Position
 	}{
 		{
 			"(1, 1)",
-			Position{1, 1},
+			[]Position{
+				{1, 1},
+			},
 			Position{1, 1},
 		},
 	}
@@ -192,7 +198,7 @@ func TestSnakeGetPosition(t *testing.T) {
 }
 
 func TestSnakeEatFood(t *testing.T) {
-	snk := NewSnake(Down, Position{5, 5})
+	snk := NewSnake(Down, []Position{{5, 5}})
 	stg := NewStage(10, 10, snk)
 	stg.food = &Food{position: Position{5, 5}}
 	stg.SnakeEatsFood()
@@ -202,7 +208,7 @@ func TestSnakeEatFood(t *testing.T) {
 		t.Errorf("food is not eaten! position: %+v\n", result)
 	}
 
-	l := len(stg.snake.section)
+	l := len(stg.snake.sections)
 	if l != 2 {
 		t.Errorf("invalid length! expected: %+v, actual: %+v\n", 2, l)
 	}

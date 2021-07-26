@@ -72,7 +72,7 @@ func (stg *Stage) SnakeEatsFood() {
 }
 
 func (stg *Stage) IsSnake(p Position) bool {
-	for _, s := range stg.snake.section {
+	for _, s := range stg.snake.sections {
 		if s == p {
 			return true
 		}

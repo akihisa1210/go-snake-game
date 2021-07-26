@@ -16,20 +16,18 @@ type Position struct {
 
 type Snake struct {
 	direction Direction
-	section   []Position // 末尾をスネークの先頭とする。
+	sections  []Position // 末尾をスネークの先頭とする。
 }
 
-func NewSnake(d Direction, p Position) *Snake {
+func NewSnake(d Direction, s []Position) *Snake {
 	return &Snake{
 		direction: d,
-		section: []Position{
-			p,
-		},
+		sections:  s,
 	}
 }
 
 func (s *Snake) GetCurrentHeadPosition() Position {
-	return s.section[len(s.section)-1]
+	return s.sections[len(s.sections)-1]
 }
 
 func (s *Snake) Move() {
@@ -47,7 +45,7 @@ func (s *Snake) Move() {
 	}
 
 	// 末尾に next を追加し、先頭の要素を削除する
-	s.section = append(s.section[1:], next)
+	s.sections = append(s.sections[1:], next)
 }
 
 func (s *Snake) ChangeDirection(d Direction) {
@@ -80,5 +78,5 @@ func (s *Snake) isOppositeDirection(target Direction) bool {
 }
 
 func (s *Snake) addSection(p Position) {
-	s.section = append(s.section, p)
+	s.sections = append(s.sections, p)
 }

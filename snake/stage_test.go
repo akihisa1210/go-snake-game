@@ -76,7 +76,7 @@ func TestStageWall(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			snk := NewSnake(Down, Position{2, 2})
+			snk := NewSnake(Down, []Position{{2, 2}})
 			stg := NewStage(tt.width, tt.height, snk)
 			result := stg.IsWall(tt.target)
 			if result != tt.want {
@@ -87,7 +87,7 @@ func TestStageWall(t *testing.T) {
 }
 
 func TestStagePlaceFood(t *testing.T) {
-	snk := NewSnake(Down, Position{5, 5})
+	snk := NewSnake(Down, []Position{{5, 5}})
 	stg := NewStage(10, 10, snk)
 	stg.PlaceFood()
 	// food が1つだけ存在することを確認する
@@ -105,7 +105,7 @@ func TestStagePlaceFood(t *testing.T) {
 }
 
 func TestStageNotPlaceFoodIfFoodExists(t *testing.T) {
-	snk := NewSnake(Down, Position{5, 5})
+	snk := NewSnake(Down, []Position{{5, 5}})
 	stg := NewStage(10, 10, snk)
 	stg.PlaceFood()
 	stg.PlaceFood()
@@ -123,7 +123,7 @@ func TestStageNotPlaceFoodIfFoodExists(t *testing.T) {
 }
 
 func TestStagePlaceFoodNotUpdateExistFood(t *testing.T) {
-	snk := NewSnake(Down, Position{5, 5})
+	snk := NewSnake(Down, []Position{{5, 5}})
 	stg := NewStage(10, 10, snk)
 	stg.PlaceFood()
 	where := stg.food.Where()
@@ -187,8 +187,7 @@ func TestStageIsSnake(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			snk := NewSnake(Up, tt.sections[0])
-			snk.section = append(snk.section, tt.sections[1:]...)
+			snk := NewSnake(Up, tt.sections)
 			stg := NewStage(100, 100, snk)
 			result := stg.IsSnake(tt.target)
 			if result != tt.want {

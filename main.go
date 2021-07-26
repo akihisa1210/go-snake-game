@@ -75,7 +75,7 @@ func main() {
 
 	go listenToKey(events)
 
-	snk := snake.NewSnake(snake.Right, snake.Position{X: 15, Y: 5})
+	snk := snake.NewSnake(snake.Right, []snake.Position{{X: 15, Y: 5}})
 	stg := snake.NewStage(50, 10, snk)
 	game := snake.NewGame(stg)
 

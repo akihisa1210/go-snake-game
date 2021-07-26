@@ -6,7 +6,7 @@ import (
 )
 
 func TestGameNotOnWall(t *testing.T) {
-	snk := NewSnake(Down, Position{1, 1})
+	snk := NewSnake(Down, []Position{{1, 1}})
 	stg := NewStage(3, 3, snk)
 	game := NewGame(stg)
 	fmt.Printf("%+v\n", snk)
@@ -18,7 +18,7 @@ func TestGameNotOnWall(t *testing.T) {
 }
 
 func TestGameOverByWall(t *testing.T) {
-	snk := NewSnake(Down, Position{1, 1})
+	snk := NewSnake(Down, []Position{{1, 1}})
 	stg := NewStage(3, 3, snk)
 	game := NewGame(stg)
 	snk.Move()

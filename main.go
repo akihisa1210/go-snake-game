@@ -39,7 +39,7 @@ func update(g *snake.Game, stg *snake.Stage, snk *snake.Snake) error {
 	for y := 0; y < stg.GetHeight(); y++ {
 		for x := 0; x < stg.GetWidth(); x++ {
 			p := snake.Position{X: x, Y: y}
-			if x == snk.GetCurrentPosition().X && y == snk.GetCurrentPosition().Y {
+			if x == snk.GetCurrentHeadPosition().X && y == snk.GetCurrentHeadPosition().Y {
 				termbox.SetCell(x, y, 'O', defaultColor, defaultColor)
 			} else if stg.IsWall(p) {
 				termbox.SetCell(x, y, 'X', defaultColor, defaultColor)

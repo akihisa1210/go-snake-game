@@ -16,30 +16,32 @@ type Position struct {
 
 type Snake struct {
 	direction Direction
-	section   Position
+	section   []Position
 }
 
 func NewSnake(d Direction, p Position) *Snake {
 	return &Snake{
 		direction: d,
-		section:   p,
+		section: []Position{
+			p,
+		},
 	}
 }
 
-func (s *Snake) GetCurrentPosition() Position {
-	return s.section
+func (s *Snake) GetCurrentHeadPosition() Position {
+	return s.section[0]
 }
 
 func (s *Snake) Move() {
 	switch s.direction {
 	case Up:
-		s.section.Y--
+		s.section[0].Y--
 	case Right:
-		s.section.X++
+		s.section[0].X++
 	case Down:
-		s.section.Y++
+		s.section[0].Y++
 	case Left:
-		s.section.X--
+		s.section[0].X--
 	}
 }
 
@@ -70,4 +72,8 @@ func (s *Snake) isOppositeDirection(target Direction) bool {
 		}
 	}
 	return false
+}
+
+func (s *Snake) addSection(p Position) {
+	s.section = append(s.section, p)
 }

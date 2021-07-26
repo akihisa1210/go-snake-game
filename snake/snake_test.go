@@ -38,7 +38,7 @@ func TestSnakeMove(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewSnake(tt.current_direction, tt.current_position)
 			s.Move()
-			if s.section != tt.want {
+			if s.section[0] != tt.want {
 				t.Errorf("invalid movement! expected: %+v, actual: %+v\n", tt.want, s.section)
 			}
 		})
@@ -97,7 +97,7 @@ func TestSnakeGetPosition(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewSnake(Down, tt.current_position)
-			cp := s.GetCurrentPosition()
+			cp := s.GetCurrentHeadPosition()
 			if cp != tt.want {
 				t.Errorf("invalid position! expected: %+v, actual: %+v\n", tt.want, cp)
 			}
@@ -114,5 +114,10 @@ func TestSnakeEatFood(t *testing.T) {
 	result := stg.food
 	if result != nil {
 		t.Errorf("food is not eaten! position: %+v\n", result)
+	}
+
+	l := len(stg.snake.section)
+	if l != 2 {
+		t.Errorf("invalid length! expected: %+v, actual: %+v\n", 2, l)
 	}
 }

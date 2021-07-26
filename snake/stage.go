@@ -71,11 +71,20 @@ func (stg *Stage) SnakeEatsFood() {
 	stg.food = nil
 }
 
-func (stg *Stage) IsSnake(p Position) bool {
-	for _, s := range stg.snake.sections {
+func (stg *Stage) IsSnakeBody(p Position) bool {
+	l := len(stg.snake.sections)
+	for i, s := range stg.snake.sections {
+		// スネークの頭は考慮しない
+		if i == l-1 {
+			break
+		}
 		if s == p {
 			return true
 		}
 	}
 	return false
+}
+
+func (stg *Stage) IsSnakeHead(p Position) bool {
+	return stg.snake.sections[len(stg.snake.sections)-1] == p
 }

@@ -134,7 +134,7 @@ func TestStagePlaceFoodNotUpdateExistFood(t *testing.T) {
 	}
 }
 
-func TestStageIsSnake(t *testing.T) {
+func TestStageIsSnakeBody(t *testing.T) {
 	tests := []struct {
 		name     string
 		sections []Position
@@ -150,7 +150,70 @@ func TestStageIsSnake(t *testing.T) {
 			false,
 		},
 		{
-			"1 section snake (match)",
+			"1 section snake (match head)",
+			[]Position{
+				{1, 1},
+			},
+			Position{1, 1},
+			false,
+		},
+		{
+			"2 section snake (not match)",
+			[]Position{
+				{10, 10},
+				{10, 9},
+			},
+			Position{10, 11},
+			false,
+		},
+		{
+			"2 section snake (match head)",
+			[]Position{
+				{10, 10},
+				{10, 9},
+			},
+			Position{10, 9},
+			false,
+		},
+		{
+			"2 section snake (match body)",
+			[]Position{
+				{10, 10},
+				{10, 9},
+			},
+			Position{10, 10},
+			true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			snk := NewSnake(Up, tt.sections)
+			stg := NewStage(100, 100, snk)
+			result := stg.IsSnakeBody(tt.target)
+			if result != tt.want {
+				t.Errorf("invalid snake judgement! expected: %+v, actual: %+v\n", tt.want, result)
+			}
+		})
+	}
+}
+
+func TestStageIsSnakeHead(t *testing.T) {
+	tests := []struct {
+		name     string
+		sections []Position
+		target   Position
+		want     bool
+	}{
+		{
+			"1 section snake (not match)",
+			[]Position{
+				{1, 1},
+			},
+			Position{1, 2},
+			false,
+		},
+		{
+			"1 section snake (match head)",
 			[]Position{
 				{1, 1},
 			},
@@ -176,20 +239,20 @@ func TestStageIsSnake(t *testing.T) {
 			true,
 		},
 		{
-			"2 section snake (match tail)",
+			"2 section snake (match body)",
 			[]Position{
 				{10, 10},
 				{10, 9},
 			},
-			Position{10, 9},
-			true,
+			Position{10, 10},
+			false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			snk := NewSnake(Up, tt.sections)
 			stg := NewStage(100, 100, snk)
-			result := stg.IsSnake(tt.target)
+			result := stg.IsSnakeHead(tt.target)
 			if result != tt.want {
 				t.Errorf("invalid snake judgement! expected: %+v, actual: %+v\n", tt.want, result)
 			}

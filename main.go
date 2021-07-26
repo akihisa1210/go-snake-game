@@ -32,14 +32,18 @@ func update(g *snake.Game, stg *snake.Stage, snk *snake.Snake) error {
 	termbox.Clear(defaultColor, defaultColor)
 
 	snk.Move()
+	stg.PlaceFood()
 
-	// render stage and snake
+	// render stage, snake, and food
 	for y := 0; y < stg.GetHeight(); y++ {
 		for x := 0; x < stg.GetWidth(); x++ {
+			p := snake.Position{X: x, Y: y}
 			if x == snk.GetCurrentPosition().X && y == snk.GetCurrentPosition().Y {
 				termbox.SetCell(x, y, 'O', defaultColor, defaultColor)
-			} else if stg.IsWall(snake.Position{X: x, Y: y}) {
+			} else if stg.IsWall(p) {
 				termbox.SetCell(x, y, 'X', defaultColor, defaultColor)
+			} else if stg.IsFood(p) {
+				termbox.SetCell(x, y, '@', defaultColor, defaultColor)
 			} else {
 				termbox.SetCell(x, y, '-', defaultColor, defaultColor)
 			}

@@ -85,3 +85,51 @@ func TestStageWall(t *testing.T) {
 		})
 	}
 }
+
+func TestStagePlaceFood(t *testing.T) {
+	snk := NewSnake(Down, Position{5, 5})
+	stg := NewStage(10, 10, snk)
+	stg.PlaceFood()
+	// food が1つだけ存在することを確認する
+	cnt := 0
+	for y := 0; y < stg.height; y++ {
+		for x := 0; x < stg.height; x++ {
+			if stg.IsFood(Position{X: x, Y: y}) {
+				cnt++
+			}
+		}
+	}
+	if cnt != 1 {
+		t.Errorf("invalid food number! expected: %+v, actual: %+v\n", 1, cnt)
+	}
+}
+
+func TestStageNotPlaceFoodIfFoodExists(t *testing.T) {
+	snk := NewSnake(Down, Position{5, 5})
+	stg := NewStage(10, 10, snk)
+	stg.PlaceFood()
+	stg.PlaceFood()
+	cnt := 0
+	for y := 0; y < stg.height; y++ {
+		for x := 0; x < stg.height; x++ {
+			if stg.IsFood(Position{X: x, Y: y}) {
+				cnt++
+			}
+		}
+	}
+	if cnt != 1 {
+		t.Errorf("invalid food number! expected: %+v, actual: %+v\n", 1, cnt)
+	}
+}
+
+func TestStagePlaceFoodNotUpdateExistFood(t *testing.T) {
+	snk := NewSnake(Down, Position{5, 5})
+	stg := NewStage(10, 10, snk)
+	stg.PlaceFood()
+	where := stg.food.Where()
+	stg.PlaceFood()
+	current := stg.food.Where()
+	if where != current {
+		t.Errorf("invalid food place! expected: %+v, actual: %+v\n", where, current)
+	}
+}

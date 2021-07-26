@@ -1,13 +1,19 @@
 package snake
 
+import (
+	"math/rand"
+	"time"
+)
+
 type Stage struct {
 	width  int
 	height int
 	snake  *Snake
+	food   *Food
 }
 
 func NewStage(w int, h int, snake *Snake) *Stage {
-	return &Stage{w, h, snake}
+	return &Stage{w, h, snake, nil}
 }
 
 func (stg *Stage) IsWall(p Position) bool {
@@ -23,4 +29,36 @@ func (stg *Stage) GetHeight() int {
 
 func (stg *Stage) GetWidth() int {
 	return stg.width
+}
+
+type Food struct {
+	position Position
+}
+
+func NewFood(p Position) *Food {
+	return &Food{position: p}
+}
+
+func (f *Food) Where() Position {
+	return f.position
+}
+
+func (stg *Stage) PlaceFood() {
+	if stg.food != nil {
+		return
+	}
+
+	rand.Seed(time.Now().UnixNano())
+	x := rand.Intn(stg.GetWidth()-2) + 1
+	y := rand.Intn(stg.GetHeight()-2) + 1
+	f := NewFood(Position{X: x, Y: y})
+
+	stg.food = f
+}
+
+func (stg *Stage) IsFood(p Position) bool {
+	if stg.food != nil && stg.food.Where() == p {
+		return true
+	}
+	return false
 }

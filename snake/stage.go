@@ -70,3 +70,12 @@ func (stg *Stage) SnakeEatsFood() {
 	stg.snake.addSection(stg.snake.GetCurrentHeadPosition())
 	stg.food = nil
 }
+
+func (stg *Stage) IsSnake(p Position) bool {
+	for _, s := range stg.snake.section {
+		if s == p {
+			return true
+		}
+	}
+	return false
+}

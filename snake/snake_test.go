@@ -1,6 +1,8 @@
 package snake
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestSnakeMove(t *testing.T) {
 	tests := []struct {
@@ -40,6 +42,90 @@ func TestSnakeMove(t *testing.T) {
 			s.Move()
 			if s.section[0] != tt.want {
 				t.Errorf("invalid movement! expected: %+v, actual: %+v\n", tt.want, s.section)
+			}
+		})
+	}
+}
+
+func TestSnakeMoveWithMultipleSections(t *testing.T) {
+	tests := []struct {
+		name              string
+		current_direction Direction
+		current_sections  []Position
+		want              []Position
+	}{
+		{
+			"2 sections and up",
+			Up,
+			[]Position{
+				{10, 11},
+				{10, 10},
+			},
+			[]Position{
+				{10, 10},
+				{10, 9},
+			},
+		},
+		{
+			"3 sections and right",
+			Right,
+			[]Position{
+				{4, 6},
+				{4, 7},
+				{5, 7},
+			},
+			[]Position{
+				{4, 7},
+				{5, 7},
+				{6, 7},
+			},
+		},
+		{
+			"4 sections and down",
+			Down,
+			[]Position{
+				{22, 7},
+				{21, 7},
+				{21, 8},
+				{21, 9},
+			},
+			[]Position{
+				{21, 7},
+				{21, 8},
+				{21, 9},
+				{21, 10},
+			},
+		},
+		{
+			"5 sections and left",
+			Left,
+			[]Position{
+				{9, 7},
+				{8, 7},
+				{8, 8},
+				{8, 7},
+				{7, 7},
+			},
+			[]Position{
+				{8, 7},
+				{8, 8},
+				{8, 7},
+				{7, 7},
+				{6, 7},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// スネークの section に current_sections を順にプッシュしていく。
+			// current_sections はスネークの尾から頭に向って並んでいるのでこの順番で OK。
+			s := NewSnake(tt.current_direction, tt.current_sections[0])
+			s.section = append(s.section, tt.current_sections[1:]...)
+			s.Move()
+			for i, w := range tt.want {
+				if s.section[i] != w {
+					t.Errorf("invalid position! index: %+v, expected: %+v, actual: %+v\n", i, w, s.section[i])
+				}
 			}
 		})
 	}

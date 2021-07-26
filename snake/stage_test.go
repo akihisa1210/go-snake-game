@@ -133,3 +133,67 @@ func TestStagePlaceFoodNotUpdateExistFood(t *testing.T) {
 		t.Errorf("invalid food place! expected: %+v, actual: %+v\n", where, current)
 	}
 }
+
+func TestStageIsSnake(t *testing.T) {
+	tests := []struct {
+		name     string
+		sections []Position
+		target   Position
+		want     bool
+	}{
+		{
+			"1 section snake (not match)",
+			[]Position{
+				{1, 1},
+			},
+			Position{1, 2},
+			false,
+		},
+		{
+			"1 section snake (match)",
+			[]Position{
+				{1, 1},
+			},
+			Position{1, 1},
+			true,
+		},
+		{
+			"2 section snake (not match)",
+			[]Position{
+				{10, 10},
+				{10, 9},
+			},
+			Position{10, 11},
+			false,
+		},
+		{
+			"2 section snake (match head)",
+			[]Position{
+				{10, 10},
+				{10, 9},
+			},
+			Position{10, 9},
+			true,
+		},
+		{
+			"2 section snake (match tail)",
+			[]Position{
+				{10, 10},
+				{10, 9},
+			},
+			Position{10, 9},
+			true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			snk := NewSnake(Up, tt.sections[0])
+			snk.section = append(snk.section, tt.sections[1:]...)
+			stg := NewStage(100, 100, snk)
+			result := stg.IsSnake(tt.target)
+			if result != tt.want {
+				t.Errorf("invalid snake judgement! expected: %+v, actual: %+v\n", tt.want, result)
+			}
+		})
+	}
+}

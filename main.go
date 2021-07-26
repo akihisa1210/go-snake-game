@@ -32,6 +32,7 @@ func update(g *snake.Game, stg *snake.Stage, snk *snake.Snake) error {
 	termbox.Clear(defaultColor, defaultColor)
 
 	snk.Move()
+	stg.SnakeEatsFood()
 	stg.PlaceFood()
 
 	// render stage, snake, and food

@@ -104,3 +104,15 @@ func TestSnakeGetPosition(t *testing.T) {
 		})
 	}
 }
+
+func TestSnakeEatFood(t *testing.T) {
+	snk := NewSnake(Down, Position{5, 5})
+	stg := NewStage(10, 10, snk)
+	stg.food = &Food{position: Position{5, 5}}
+	stg.SnakeEatsFood()
+
+	result := stg.food
+	if result != nil {
+		t.Errorf("food is not eaten! position: %+v\n", result)
+	}
+}

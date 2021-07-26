@@ -62,3 +62,10 @@ func (stg *Stage) IsFood(p Position) bool {
 	}
 	return false
 }
+
+func (stg *Stage) SnakeEatsFood() {
+	if stg.food != nil && stg.snake.section != stg.food.Where() {
+		return
+	}
+	stg.food = nil
+}

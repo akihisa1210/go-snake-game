@@ -9,6 +9,7 @@ func NewGame(stg *Stage) *Game {
 }
 
 func (g *Game) IsOver() bool {
-	// スネークの現在位置が壁かどうか（true ならゲームオーバー）
-	return g.stage.IsWall(g.stage.snake.GetCurrentHeadPosition())
+	// スネークの頭の位置が壁か、スネークの胴体ならゲームオーバー
+	h := g.stage.snake.GetCurrentHeadPosition()
+	return g.stage.IsWall(h) || g.stage.IsSnakeBody(h)
 }

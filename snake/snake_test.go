@@ -208,6 +208,8 @@ func TestSnakeEatFood(t *testing.T) {
 		t.Errorf("food is not eaten! position: %+v\n", result)
 	}
 
+	snk.Move()
+
 	l := len(stg.snake.sections)
 	if l != 2 {
 		t.Errorf("invalid length! expected: %+v, actual: %+v\n", 2, l)

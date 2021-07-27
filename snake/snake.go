@@ -17,12 +17,14 @@ type Position struct {
 type Snake struct {
 	direction Direction
 	sections  []Position // 末尾をスネークの先頭とする。
+	length    int
 }
 
 func NewSnake(d Direction, s []Position) *Snake {
 	return &Snake{
 		direction: d,
 		sections:  s,
+		length:    len(s),
 	}
 }
 
@@ -44,8 +46,15 @@ func (s *Snake) Move() {
 		next.X--
 	}
 
-	// 末尾に next を追加し、先頭の要素を削除する
-	s.sections = append(s.sections[1:], next)
+	if s.length != len(s.sections) {
+		// フードを食べたあと、最初の移動
+		// sections 末尾（スネーク先頭）に next を追加するだけ
+		s.sections = append(s.sections, next)
+	} else {
+		// フードを食べていない場合の移動
+		// sections 末尾（スネーク先頭）に next を追加し、section 先頭（スネーク末尾）の要素を削除する
+		s.sections = append(s.sections[1:], next)
+	}
 }
 
 func (s *Snake) ChangeDirection(d Direction) {
@@ -78,5 +87,5 @@ func (s *Snake) isOppositeDirection(target Direction) bool {
 }
 
 func (s *Snake) addSection(p Position) {
-	s.sections = append(s.sections, p)
+	s.length++
 }

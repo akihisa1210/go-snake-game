@@ -34,7 +34,6 @@ func update(g *snake.Game, stg *snake.Stage, snk *snake.Snake) error {
 	snk.Move()
 	stg.SnakeEatsFood()
 	stg.PlaceFood()
-
 	// render stage, snake, and food
 	for y := 0; y < stg.GetHeight(); y++ {
 		for x := 0; x < stg.GetWidth(); x++ {
@@ -75,7 +74,12 @@ func main() {
 
 	go listenToKey(events)
 
-	snk := snake.NewSnake(snake.Right, []snake.Position{{X: 15, Y: 5}})
+	snk := snake.NewSnake(snake.Right, []snake.Position{
+		{X: 12, Y: 5},
+		{X: 13, Y: 5},
+		{X: 14, Y: 5},
+		{X: 15, Y: 5},
+	})
 	stg := snake.NewStage(50, 10, snk)
 	game := snake.NewGame(stg)
 
